@@ -1,5 +1,5 @@
 # TTNetView
-仿Youtube网络状态监控弹框 
+网络状态监控弹框 
 动态调节TabBar位置
 
 
