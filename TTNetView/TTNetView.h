@@ -17,7 +17,8 @@ typedef enum {
 #define DisMissViewNotification @"DisMissViewNotification" ///< 窗口消除通知
 #define ShowBarNotification @"ShowBarNotification" ///< Bar上移通知
 #define DisMissBarNotification @"DisMissBarNotification" ///< Bar下移通知
-#define TTHeight 20
+#define iphoneX [TTNetView isiPhoneXSeries]
+#define TTHeight (iphoneX ? 49 : 20)
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)shareManager;
 
 - (void)AFNReachability;
+
++ (BOOL)isiPhoneXSeries;
 
 - (void)show;
 
