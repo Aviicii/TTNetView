@@ -119,28 +119,26 @@ static TTNetView *manager = nil;
     __weak AFNetworkReachabilityManager *weakManager = AFNManager;
     __weak TTNetView *weakSelf = self;
   [AFNManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-      __strong TTNetView *strongSelf = weakSelf;
-      __strong AFNetworkReachabilityManager *strongManager = weakManager;
-      if (status == AFNetworkReachabilityStatusUnknown || status == AFNetworkReachabilityStatusNotReachable) {
+       if (status == AFNetworkReachabilityStatusUnknown || status == AFNetworkReachabilityStatusNotReachable) {
           
-          if (!strongSelf.isGet) {
-              strongSelf.isGet = YES;
-              strongSelf.more = NoNet;
+          if (!weakSelf.isGet) {
+              weakSelf.isGet = YES;
+              weakSelf.more = NoNet;
               [[NSNotificationCenter defaultCenter] postNotificationName:ShowBarNotification object:nil];
-              [strongSelf setConfig:NoNet];
-              [strongSelf show];
+              [weakSelf setConfig:NoNet];
+              [weakSelf show];
           }
       }else{
-          if (strongSelf.isGet) {
-              strongSelf.isGet = NO;
-              strongSelf.more = YesNet;
-              [strongSelf setConfig:YesNet];
+          if (weakSelf.isGet) {
+              weakSelf.isGet = NO;
+              weakSelf.more = YesNet;
+              [weakSelf setConfig:YesNet];
               dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                  [strongSelf disMiss];
+                  [weakSelf disMiss];
               });
           }
       }
-      [strongManager startMonitoring];
+      [weakManager startMonitoring];
   }];
  
   //3.开始监听
