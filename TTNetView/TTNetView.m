@@ -31,6 +31,7 @@ static TTNetView *manager = nil;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:ShowViewNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:DisMissViewNotification object:nil];
+    NSLog(@"%@",[self valueForKey:@"retainCount"]);
 }
 
 + (instancetype)shareManager {
@@ -118,27 +119,31 @@ static TTNetView *manager = nil;
   AFNetworkReachabilityManager *AFNManager = [AFNetworkReachabilityManager sharedManager];
     __weak AFNetworkReachabilityManager *weakManager = AFNManager;
     __weak TTNetView *weakSelf = self;
+    NSLog(@"%@",[weakSelf valueForKey:@"retainCount"]);
   [AFNManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+      __strong TTNetView *strongSelf = weakSelf;
+      __strong AFNetworkReachabilityManager *strongManager = weakManager;
        if (status == AFNetworkReachabilityStatusUnknown || status == AFNetworkReachabilityStatusNotReachable) {
           
-          if (!weakSelf.isGet) {
-              weakSelf.isGet = YES;
-              weakSelf.more = NoNet;
+          if (!strongSelf.isGet) {
+              strongSelf.isGet = YES;
+              strongSelf.more = NoNet;
               [[NSNotificationCenter defaultCenter] postNotificationName:ShowBarNotification object:nil];
-              [weakSelf setConfig:NoNet];
-              [weakSelf show];
+              [strongSelf setConfig:NoNet];
+              [strongSelf show];
           }
       }else{
-          if (weakSelf.isGet) {
-              weakSelf.isGet = NO;
-              weakSelf.more = YesNet;
-              [weakSelf setConfig:YesNet];
+          if (strongSelf.isGet) {
+              strongSelf.isGet = NO;
+              strongSelf.more = YesNet;
+              [strongSelf setConfig:YesNet];
               dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                  [weakSelf disMiss];
+                  [strongSelf disMiss];
               });
           }
       }
-      [weakManager startMonitoring];
+      NSLog(@"%@",[strongSelf valueForKey:@"retainCount"]);
+      [strongManager startMonitoring];
   }];
  
   //3.开始监听
