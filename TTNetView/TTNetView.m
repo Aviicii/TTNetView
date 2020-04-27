@@ -119,10 +119,9 @@ static TTNetView *manager = nil;
   AFNetworkReachabilityManager *AFNManager = [AFNetworkReachabilityManager sharedManager];
     __weak AFNetworkReachabilityManager *weakManager = AFNManager;
     __weak TTNetView *weakSelf = self;
-    NSLog(@"%@",[weakSelf valueForKey:@"retainCount"]);
   [AFNManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-      __strong TTNetView *strongSelf = weakSelf;
       __strong AFNetworkReachabilityManager *strongManager = weakManager;
+      __strong TTNetView *strongSelf = weakSelf;
        if (status == AFNetworkReachabilityStatusUnknown || status == AFNetworkReachabilityStatusNotReachable) {
           
           if (!strongSelf.isGet) {
@@ -142,7 +141,6 @@ static TTNetView *manager = nil;
               });
           }
       }
-      NSLog(@"%@",[strongSelf valueForKey:@"retainCount"]);
       [strongManager startMonitoring];
   }];
  
